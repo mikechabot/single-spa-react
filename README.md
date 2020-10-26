@@ -1,4 +1,5 @@
 # single-spa-react
 
-- npm install
-- npm start
+https://single-spa.js.org/
+
+### See https://github.com/mikechabot/single-spa-root-config/blob/master/README.md
