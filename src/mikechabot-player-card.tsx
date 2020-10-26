@@ -1,83 +1,104 @@
-// import "./set-public-path";
-// import React from "react";
-// import ReactDOM from "react-dom";
-// import singleSpaReact from "single-spa-react";
-// import Root from "./root.component";
-//
-// const lifecycles = singleSpaReact({
-//   React,
-//   ReactDOM,
-//   rootComponent: Root,
-//   errorBoundary(err, info, props) {
-//     // Customize the root error boundary for your microfrontend here.
-//     return null;
-//   },
-// });
-//
-// export const { bootstrap, mount, unmount } = lifecycles;
-
 import "./set-public-path";
-
-import singleSpa from "single-spa";
-
 import React from "react";
 import ReactDOM from "react-dom";
 import singleSpaReact from "single-spa-react";
-import RootComponent from "./root.component";
+import Root from "./root.component";
 
-let internalMountId;
-let unmountMe;
+const lifecycles = singleSpaReact({
+  React,
+  ReactDOM,
+  rootComponent: Root,
+  errorBoundary(err, info, props) {
+    // Customize the root error boundary for your microfrontend here.
+    return null;
+  },
+});
 
-export const bootstrap = (props) => {
-  console.log("bootstrap");
-
-  document.addEventListener("mount-component", (event: CustomEvent) => {
-    console.log("mounting with customEvent", event);
-    console.log("mounting with props", props);
-
-    internalMountId = event.detail.mountId;
-
-    const domElement = document.getElementById(internalMountId);
-    const parcelProps = { domElement, customProp1: "foo" };
-
-    const MyParcel = singleSpaReact({
-      React,
-      ReactDOM,
-      rootComponent: () => (
-        <RootComponent name={props.name} {...props.customProps} />
-      ),
-      errorBoundary(err, info, props) {
-        return <div>This renders when a catastrophic error occurs</div>;
-      },
-    });
-
-    const { unmount: unmountMe } = props.mountParcel(MyParcel, parcelProps);
-  });
-
-  document.addEventListener("unmount-component", () => {
-    console.log("Unmounting node", props);
-    ReactDOM.unmountComponentAtNode(document.getElementById(internalMountId));
-  });
-
+lifecycles.bootstrap = (props) => {
+  console.log("Bootstrapping", props);
+  // one time initialization
+  // eslint-disable-next-line no-console
   return Promise.resolve();
 };
 
-export const mount = (props) => {
-  console.log("mounting");
-  return Promise.resolve();
-};
-
-export const unmount = (props) => {
+lifecycles.mount = (props) => {
+  console.log("MOUNTING");
   console.log(props);
-
-  document.addEventListener("unmount-component", () => {
-    ReactDOM.unmountComponentAtNode(
-      document.getElementById("dk-live-experience--player-card")
-    );
-  });
-
+  ReactDOM.render(<Root {...props} />, props.domElement);
   return Promise.resolve();
 };
+
+lifecycles.unmount = (props) => {
+  ReactDOM.unmountComponentAtNode(props.domElement);
+  return Promise.resolve();
+};
+
+export const { bootstrap, mount, unmount } = lifecycles;
+
+// import "./set-public-path";
+//
+// import singleSpa from "single-spa";
+//
+// import React from "react";
+// import ReactDOM from "react-dom";
+// import singleSpaReact from "single-spa-react";
+// import RootComponent from "./root.component";
+//
+// let internalMountId;
+// let unmountMe;
+//
+// export const bootstrap = (props) => {
+//   console.log("bootstrap");
+//
+//   document.addEventListener("mount-component", (event: CustomEvent) => {
+//     console.log("Programmatically mounting node", props);
+//     console.log("mounting with customEvent", event);
+//     console.log("mounting with props", props);
+//
+//     internalMountId = event.detail.mountId;
+//
+//     const domElement = document.getElementById(internalMountId);
+//     const parcelProps = { domElement, customProp1: "foo" };
+//
+//     const MyParcel = singleSpaReact({
+//       React,
+//       ReactDOM,
+//       rootComponent: () => (
+//         <RootComponent name={props.name} {...props.customProps} />
+//       ),
+//       errorBoundary(err, info, props) {
+//         return <div>This renders when a catastrophic error occurs</div>;
+//       },
+//       preserveGlobal: true,
+//     });
+//
+//     const { unmount: unmountMe } = props.mountParcel(MyParcel, parcelProps);
+//   });
+//
+//   document.addEventListener("unmount-component", () => {
+//     console.log("Programmatically unmounting node", props);
+//     ReactDOM.unmountComponentAtNode(document.getElementById(internalMountId));
+//   });
+//
+//   return Promise.resolve();
+// };
+//
+// export const mount = (props) => {
+//   console.log("mounting");
+//   return Promise.resolve();
+// };
+//
+// export const unmount = (props) => {
+//   console.log("Within the actual unmount");
+//
+//   document.addEventListener("unmount-component", () => {
+//     ReactDOM.unmountComponentAtNode(
+//       document.getElementById("dk-live-experience--player-card")
+//     );
+//   });
+//
+//   return Promise.resolve();
+// };
 
 // export const bootstrap = () => {
 //   // one time initialization
