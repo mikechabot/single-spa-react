@@ -15,15 +15,10 @@ const lifecycles = singleSpaReact({
 });
 
 lifecycles.bootstrap = (props) => {
-  console.log("Bootstrapping", props);
-  // one time initialization
-  // eslint-disable-next-line no-console
   return Promise.resolve();
 };
 
 lifecycles.mount = (props) => {
-  console.log("MOUNTING");
-  console.log(props);
   ReactDOM.render(<Root {...props} />, props.domElement);
   return Promise.resolve();
 };
