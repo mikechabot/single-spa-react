@@ -61,8 +61,11 @@ typings/
 .next
 dist
 
-# Editor directories and files
+# IntelliJ
+*.iml
 .idea
+
+# Editor directories and files
 .vscode
 *.suo
 *.ntvs*

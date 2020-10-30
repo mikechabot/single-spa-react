@@ -5,4 +5,4 @@ import { setPublicPath } from "systemjs-webpack-interop";
  * https://single-spa.js.org/docs/faq/#code-splits
  */
 
-setPublicPath("@mikechabot/player-card");
+setPublicPath("@mikechabot/test-application");

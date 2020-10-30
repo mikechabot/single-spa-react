@@ -1,5 +1,5 @@
 {
-  "name": "@mikechabot/player-card",
+  "name": "@mikechabot/test-application",
   "scripts": {
     "start": "webpack-dev-server",
     "start:standalone": "webpack-dev-server --env.standalone",
